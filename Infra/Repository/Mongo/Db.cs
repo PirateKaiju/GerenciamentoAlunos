@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization;
 using MongoDB.Bson.Serialization.Conventions;
 using MongoDB.Bson.Serialization.IdGenerators;
@@ -10,8 +11,8 @@ namespace Infra.Repository.Mongo
 {
     public class Db
     {
-        private static string connectionStr = "mongodb://localhost:27017/"; //TODO: LOAD FROM ENV
-        private static string dbName = "testdbgerenciamentoalunos";
+        private static string connectionStr = ""; //TODO: LOAD FROM ENV
+        private static string dbName = "";
         private static IMongoClient client = null;
 
         public static IMongoDatabase getDatabase() { //DONETODO: IMPLEMENT AS SINGLETON //TODO: FIND OUT IF SINGLETON IS OK HERE
@@ -39,15 +40,41 @@ namespace Infra.Repository.Mongo
 
         }
 
-        public void retrieveDocument() {
+        public static T retrieveDocumentById<T>(string collection, string id) {
             //IMPORTANT: NECESSARY TO CONVERT ID TO A STRING WHEN READING
+
+            ObjectId objectId = ObjectId.Parse(id);
+
+            var filter = Builders<T>.Filter.Eq("_id", objectId);
+
+            T result = getDatabase().GetCollection<T>(collection).Find(filter).FirstOrDefault();
+            return result;
         }
 
-        public void retrieveCollection() {
+        public static T retrieveDocumentByAttribute<T>(string collection, string attribute, string attribValue)
+        {
+            //IMPORTANT: NECESSARY TO CONVERT ID TO A STRING WHEN READING
+
+            var filter = Builders<T>.Filter.Eq(attribute, attribValue);
+
+            T result = getDatabase().GetCollection<T>(collection).Find(filter).FirstOrDefault();
+            return result;
         }
 
-        public void deleteDocument() {
-        
+        public static List<T> retrieveCollectionAsList<T>(string collection) {//IS IT NECESSARY?
+
+            return getDatabase().GetCollection<T>(collection).Find(_ => true).ToList();
+
+        }
+
+        public static bool deleteDocument<T>(string collection, string id) {
+
+            ObjectId objectId = ObjectId.Parse(id);
+            var filter = Builders<T>.Filter.Eq("_id", objectId);
+
+            getDatabase().GetCollection<T>(collection).DeleteOne(filter);
+
+            return true;
         }
 
         private class StringIdConvention : ConventionBase, IPostProcessingConvention {

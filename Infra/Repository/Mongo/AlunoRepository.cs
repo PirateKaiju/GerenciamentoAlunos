@@ -17,17 +17,22 @@ namespace Infra.Repository.Mongo
 
         public void Delete(string id)
         {
-            throw new NotImplementedException();
+            Db.deleteDocument<Aluno>("aluno", id);
         }
 
         public Aluno Read(string id)
         {
-            throw new NotImplementedException();
+            return Db.retrieveDocumentById<Aluno>("aluno", id);
         }
 
         public List<Aluno> ReadAll(string id)
         {
             throw new NotImplementedException();
         }
+
+        /*public Usuario retrieveAssociatedUser(string usuarioId)
+        {
+            return Db.retrieveDocumentById<Usuario>("usuario", usuarioId);
+        }*/
     }
 }

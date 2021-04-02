@@ -7,6 +7,8 @@ namespace Domain.Interfaces
 {
     public interface IUsuarioRepository: IRepository<Usuario>
     {
-        String encriptPassword(String password); //TODO: ISOLATE IN AN INFRA FUNCTION
+        Usuario ReadByName(string name); //TODO: REFACTOR LATER
+        /*String encriptPassword(String password); //TODO: ISOLATE IN AN INFRA FUNCTION
+        String decriptPassword(String password); //TODO: MIGHT NOT BE NEEDED*/
     }
 }

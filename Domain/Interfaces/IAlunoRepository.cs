@@ -7,5 +7,6 @@ namespace Domain.Interfaces
 {
     public interface IAlunoRepository: IRepository<Aluno>
     {
+        //Usuario retrieveAssociatedUser(string usuarioId);
     }
 }

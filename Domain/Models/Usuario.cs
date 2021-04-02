@@ -9,6 +9,8 @@ namespace Domain.Models
         public String Id { get; set; }
         public String username { get; set; }
         public String password { get; set; }
+
+        //TODO: ADD EMAIL
         public String role { get; set; }
 
     }
