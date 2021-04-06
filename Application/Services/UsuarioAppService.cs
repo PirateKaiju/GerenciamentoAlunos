@@ -11,14 +11,18 @@ namespace Application.Services
     {
 
         private IUsuarioRepository _repository = null;
+        private IHashing _hasher = null;
 
-        public UsuarioAppService(IUsuarioRepository repository) {
+        public UsuarioAppService(IUsuarioRepository repository, IHashing hasher) {
 
             this._repository = repository;
+            this._hasher = hasher;
 
         }
         public bool Create(Usuario entidade)
         {
+            entidade.password = this._hasher.Hash(entidade.password);
+            
             this._repository.Create(entidade);
 
             return true;
@@ -39,6 +43,12 @@ namespace Application.Services
         public Usuario ReadByName(string name)
         {
             return this._repository.ReadByName(name);
+        }
+
+        public bool VerifyPassword(string inputPassword, string hashedRealPassword) {
+
+            return this._hasher.Verify(inputPassword, hashedRealPassword);
+
         }
     }
 }

@@ -7,6 +7,7 @@ using Application.Interfaces;
 using Application.Services;
 using Domain.Interfaces;
 using Infra.Repository.Mongo;
+using Infra.Security;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
@@ -36,6 +37,7 @@ namespace UI.Web
             services.AddScoped<IAlunoRepository, AlunoRepository>();
             services.AddScoped<IAlunoAppService, AlunoAppService>();
             services.AddScoped<IUsuarioAppService, UsuarioAppService>();
+            services.AddScoped<IHashing, BCryptHashing>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie();

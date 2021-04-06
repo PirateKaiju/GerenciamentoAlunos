@@ -11,8 +11,8 @@ namespace Infra.Repository.Mongo
 {
     public class Db
     {
-        private static string connectionStr = ""; //TODO: LOAD FROM ENV
-        private static string dbName = "";
+        private static string connectionStr = "mongodb://localhost:27017/"; //TODO: LOAD FROM ENV
+        private static string dbName = "testdbgerenciamentoalunos";
         private static IMongoClient client = null;
 
         public static IMongoDatabase getDatabase() { //DONETODO: IMPLEMENT AS SINGLETON //TODO: FIND OUT IF SINGLETON IS OK HERE
@@ -57,7 +57,7 @@ namespace Infra.Repository.Mongo
 
             var filter = Builders<T>.Filter.Eq(attribute, attribValue);
 
-            T result = getDatabase().GetCollection<T>(collection).Find(filter).FirstOrDefault();
+            T result = getDatabase().GetCollection<T>(collection).Find(filter).FirstOrDefault(); //TODO: HANDLE ERRORS AND NOT FOUND
             return result;
         }
 

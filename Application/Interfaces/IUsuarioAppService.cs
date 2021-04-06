@@ -8,5 +8,6 @@ namespace Application.Interfaces
 {
     public interface IUsuarioAppService: IAppService<Usuario>
     {
+        bool VerifyPassword(string inputPassword, string hashedRealPassword);
     }
 }

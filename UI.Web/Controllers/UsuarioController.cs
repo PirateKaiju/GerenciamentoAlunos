@@ -42,22 +42,34 @@ namespace UI.Web.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> Login(IFormCollection collection) {
-
-            
-
-
+        public async Task<ActionResult> Login(Usuario loginUsuario) { //TODO: USE A VIEWMODEL INSTEAD?
 
             //Verificacao de dados (a partir da infra?)
-            Usuario usuario = this._usuarioAppService.ReadByName("somename");
+            Usuario usuario = this._usuarioAppService.ReadByName(loginUsuario.username);
 
-            List<Claim> userClaims = CookieClaimAuthentication.makeUserClaims(usuario);
+            if (usuario != null) {
 
-            var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+                bool loginValid = this._usuarioAppService.VerifyPassword(loginUsuario.password, usuario.password);
 
-            await HttpContext.SignInAsync(new ClaimsPrincipal(userIdentity));
+                
 
-            return RedirectToAction("Index", "Home");
+                if (loginValid) { //IS IT NECESSARY TO SEPARATE THIS BLOCK IN SOME FORM OF ENCAPSULATION?
+
+                    List<Claim> userClaims = CookieClaimAuthentication.makeUserClaims(usuario);
+
+                    var userIdentity = new ClaimsIdentity(userClaims, "User Identity");
+
+                    await HttpContext.SignInAsync(new ClaimsPrincipal(userIdentity));
+
+                    return RedirectToAction("Index", "Home");
+
+                }
+
+            }
+
+            return View(loginUsuario);
+
+            
 
         }
 
@@ -70,19 +82,35 @@ namespace UI.Web.Controllers
         // POST: Usuario/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Register(IFormCollection collection)
+        public ActionResult Register(Usuario usuarioRegistrando) 
         {
 
             //TODO: HANDLE DIFFERENT USER TYPES
+            // MAYBE USE MULTIPLE VIEWMODELS ?
+
+            //TODO: ADD PASSWORD CONFIRMATION
             try
             {
                 // TODO: Add insert logic here
 
-                return RedirectToAction(nameof(Index));
+                if (this._usuarioAppService.ReadByName(usuarioRegistrando.username) == null) {
+
+                    //TODO: VALIDATE PASSWORD AND STUFF, PROBABLY WILL USE SOME ORGANIZED VALIDATOR
+
+                    usuarioRegistrando.role = "Aluno"; //TODO: TEMPORARY, REMOVE THIS
+
+                    this._usuarioAppService.Create(usuarioRegistrando);
+
+                    return RedirectToAction(nameof(Index));
+
+                }
+
+                return View(usuarioRegistrando);
+                
             }
             catch
             {
-                return View();
+                return View(usuarioRegistrando);
             }
         }
 
