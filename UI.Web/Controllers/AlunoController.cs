@@ -6,15 +6,18 @@ using Application.Interfaces;
 using Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using UI.Web.Models;
 
 namespace UI.Web.Controllers
 {
     public class AlunoController : Controller
     {
         IAlunoAppService _alunoApp = null;
-        public AlunoController(IAlunoAppService alunoApp) {
+        IUsuarioAppService _usuarioApp = null;
+        public AlunoController(IAlunoAppService alunoApp, IUsuarioAppService usuarioApp) {
 
             this._alunoApp = alunoApp;
+            this._usuarioApp = usuarioApp;
 
         }
         // GET: Aluno
@@ -40,17 +43,49 @@ namespace UI.Web.Controllers
         // POST: Aluno/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(RegisterAlunoViewModel alunouser)
         {
             try
             {
-                // TODO: Add insert logic here
 
-                return RedirectToAction(nameof(Index));
+                if (this._usuarioApp.ReadByName(alunouser.Username) == null) //Use this simple validation for any other constraint
+                {
+
+                    //TODO: VALIDATE PASSWORD AND STUFF, PROBABLY WILL USE SOME ORGANIZED VALIDATOR
+
+                    //TODO: FIND OUT IF THERES A BETTER WAY TO POPULATE AN OBJECT
+                    Usuario usuarioRegistrando = new Usuario { 
+                        username = alunouser.Username,
+                        password = alunouser.Password,
+                        role = "Aluno"
+                    };
+
+
+                    this._usuarioApp.Create(usuarioRegistrando);
+
+
+                    Aluno alunoRegistrando = new Aluno
+                    {
+
+                        nome = alunouser.Nome,
+                        endereco = alunouser.Endereco,
+                        UsuarioID = this._usuarioApp.ReadByName(alunouser.Username).Id //The user must be created first
+
+                    };
+
+
+                    this._alunoApp.Create(alunoRegistrando);
+
+                    return RedirectToAction(nameof(Index));
+
+                }
+
+                return View(alunouser);
+
             }
             catch
             {
-                return View();
+                return View(alunouser);
             }
         }
 

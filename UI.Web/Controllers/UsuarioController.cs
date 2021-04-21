@@ -17,15 +17,22 @@ namespace UI.Web.Controllers
     {
 
         private IUsuarioAppService _usuarioAppService = null;
+        private IHttpContextAccessor _httpContextAccessor = null;
 
-        public UsuarioController(IUsuarioAppService usuarioAppService) 
+        public UsuarioController(IUsuarioAppService usuarioAppService, IHttpContextAccessor httpContextAccessor) 
         {
             this._usuarioAppService = usuarioAppService;
+            this._httpContextAccessor = httpContextAccessor; 
         }
 
         // GET: Usuario
         public ActionResult Index()
         {
+            //TEST ONLY
+            Console.WriteLine("CURRENT USER: ");
+            Console.WriteLine(_httpContextAccessor.HttpContext.User.Claims.Count());
+            Console.WriteLine(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role).Value);
+
             return View();
         }
 
@@ -86,7 +93,7 @@ namespace UI.Web.Controllers
         {
 
             //TODO: HANDLE DIFFERENT USER TYPES
-            // MAYBE USE MULTIPLE VIEWMODELS ?
+            // MAYBE USE MULTIPLE VIEWMODELS or handle registration on each 'user type' controller?
 
             //TODO: ADD PASSWORD CONFIRMATION
             try

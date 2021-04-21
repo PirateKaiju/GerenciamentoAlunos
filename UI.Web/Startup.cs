@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -34,9 +35,14 @@ namespace UI.Web
         {
 
             services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+            services.AddScoped<IUsuarioAppService, UsuarioAppService>();
             services.AddScoped<IAlunoRepository, AlunoRepository>();
             services.AddScoped<IAlunoAppService, AlunoAppService>();
-            services.AddScoped<IUsuarioAppService, UsuarioAppService>();
+            services.AddScoped<IProfessorRepository, ProfessorRepository>();
+            services.AddScoped<IProfessorAppService, ProfessorAppService>();
+            services.AddScoped<IDisciplinaRepository, DisciplinaRepository>();
+            services.AddScoped<IDisciplinaAppService, DisciplinaAppService>();
+
             services.AddScoped<IHashing, BCryptHashing>();
 
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -52,6 +58,8 @@ namespace UI.Web
                 });
 
             });
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             services.AddScoped<IAuthorizationHandler, RolesAuthorizationHandler>();
 

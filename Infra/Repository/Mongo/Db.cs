@@ -33,6 +33,8 @@ namespace Infra.Repository.Mongo
 
         }
 
+        //TODO: USE ASYNC METHODS?
+
         public static bool insertDocument<T>(string collection, object document) {
             
             getDatabase().GetCollection<T>(collection).InsertOne((T) document);
