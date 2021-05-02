@@ -8,5 +8,8 @@ namespace Application.Interfaces
 {
     public interface IProfessorAppService: IAppService<Professor>
     {
+
+        Professor ReadByAssociatedUser(string UsuarioId);
+
     }
 }

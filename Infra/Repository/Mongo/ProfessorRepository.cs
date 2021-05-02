@@ -28,9 +28,15 @@ namespace Infra.Repository.Mongo
             throw new NotImplementedException();
         }
 
-        /*public Usuario retrieveAssociatedUser(string usuarioId)
+        public Usuario retrieveAssociatedUser(string usuarioId)
         {
             return Db.retrieveDocumentById<Usuario>("usuario", usuarioId);
-        }*/
+        }
+
+        public Professor retrieveProfessorByAssociatedUser(string usuarioId) {
+
+            return Db.retrieveDocumentByAttribute<Professor>("professor", "UsuarioId", usuarioId);
+
+        }
     }
 }

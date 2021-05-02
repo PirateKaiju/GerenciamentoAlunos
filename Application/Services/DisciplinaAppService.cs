@@ -29,7 +29,7 @@ namespace Application.Services
 
         public Disciplina Read(string id)
         {
-            throw new NotImplementedException();
+            return this._repository.Read(id);
         }
 
         public Disciplina ReadByName(string name)

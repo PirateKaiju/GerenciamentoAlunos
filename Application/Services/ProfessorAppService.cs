@@ -40,5 +40,12 @@ namespace Application.Services
             //return this._repository.ReadByName(name);
             throw new NotImplementedException();
         }
+
+        public Professor ReadByAssociatedUser(string UsuarioId) {
+
+            return this._repository.retrieveProfessorByAssociatedUser(UsuarioId);
+
+        }
+
     }
 }

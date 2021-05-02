@@ -33,9 +33,12 @@ namespace UI.Web.Controllers
         }
 
         // GET: Disciplina/Details/5
-        public ActionResult Details(int id)
+        public ActionResult Details(String id)
         {
-            return View();
+
+            Disciplina disciplina = this._disciplinaAppService.Read(id);
+
+            return View(disciplina);
         }
 
         [Authorize(Roles = "Professor")]
@@ -54,15 +57,16 @@ namespace UI.Web.Controllers
             try
             {
                 // TODO: Add insert logic here
+                // TODO: ADD VALIDATION LOGIC
 
                 Usuario currentUsr = this._usuarioAppService.ReadByName(this._httpContextAccessor.HttpContext.User.FindFirst("UserName").Value);
                 //this._httpContextAccessor.HttpContext.User.FindFirst("UserName").Value;
 
                 
 
-                //disciplina.ProfessorId = "";
+                disciplina.ProfessorId = this._professorAppService.ReadByAssociatedUser(currentUsr.Id).Id;
 
-                
+                this._disciplinaAppService.Create(disciplina);
 
                 return RedirectToAction(nameof(Index));
             }

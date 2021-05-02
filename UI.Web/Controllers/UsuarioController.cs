@@ -31,7 +31,7 @@ namespace UI.Web.Controllers
             //TEST ONLY
             Console.WriteLine("CURRENT USER: ");
             Console.WriteLine(_httpContextAccessor.HttpContext.User.Claims.Count());
-            Console.WriteLine(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role).Value);
+            Console.WriteLine(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.Role).Value); //EXPECTED TO THROW AN ERROR IF NOT LOGGED IN
 
             return View();
         }
@@ -77,6 +77,15 @@ namespace UI.Web.Controllers
             return View(loginUsuario);
 
             
+
+        }
+
+        // GET: Usuario/Logout
+        public async Task<ActionResult> Logout() {
+            
+            await HttpContext.SignOutAsync();
+
+            return RedirectToAction("Login", "Usuario");
 
         }
 

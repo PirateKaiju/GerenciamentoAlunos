@@ -7,6 +7,8 @@ namespace Domain.Interfaces
 {
     public interface IProfessorRepository: IRepository<Professor>
     {
-        //Usuario retrieveAssociatedUser(string usuarioId); //REMOVE LATER
+        Usuario retrieveAssociatedUser(string usuarioId); //REMOVE LATER
+
+        Professor retrieveProfessorByAssociatedUser(string usuarioId);
     }
 }
